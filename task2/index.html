@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">    <style>
+        #preloader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin: -25px 0 0 -25px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <input id="country-name" type="text">
+    <button id="show">Show information</button> 
+
+    <p><b>Name: </b><span id="name"></span></p>
+    <p><b>Region: </b><span id="region"></span></p>
+    <p><b>Subregion: </b><span id="subregion"></span></p>
+    <p><b>Capital: </b><span id="capital"></span></p>
+    <p><b>Flag: </b><span id="flag"></span></p>
+    <div id="preloader"></div>
+    <script>
+        $(document).ready(function(){
+            $('#show').on('click',function(){
+                let countryName=$('#country-name').val().trim();
+                if (countryName === "") {
+                    Swal.fire('Error', 'Please enter a country name', 'error');
+                    return;
+                }
+                $('#preloader').show();
+                $.ajax({
+                    method:'GET',
+                    url:`https://restcountries.com/v2/name/${countryName}`,
+                    success:function(data){
+                        $('#preloader').hide();
+                        let country=data[0];
+                        $('#name').text(country.name);
+                        $('#region').text(country.region);
+                        $('#subregion').text(country.subregion);
+                        $('#capital').text(country.capital);
+                        $('#flag').html(`<img src="${country.flag}" alt="flag of ${country.name}" width=100px>`);   
+                    },
+                    error:function(){
+                        $('#preloader').hide();
+                        Swal.fire('Error', 'Country not found. Please enter a valid country name.', 'error');
+                    }
+                })
+            })
+
+        })
+    </script>
+</body>
+</html>

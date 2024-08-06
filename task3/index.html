@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<style>
+    #preloader {
+        display: none;
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin: -25px 0 0 -25px;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+    <div id="preloader"></div>
+    <table id="countries-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Flag</th>
+                <th>Name</th>
+                <th>Capital</th>
+                <th>Population</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <script>
+        $(document).ready(function(){
+            $('#preloader').show();
+            $.ajax({
+            method:'GET',
+            url:'https://restcountries.com/v2/all',
+            success:function(data){
+                $('#preloader').hide()
+                data.forEach(element => {
+                    let row=$('<tr>');
+                    row.append($('<td>').text(element.alpha2Code));
+                    row.append($('<td>').html($('<img>').attr('src', element.flag).attr('alt', `Flag of ${element.name}`).css('width', '50px')));
+                    row.append($('<td>').text(element.name));
+                    row.append($('<td>').text(element.capital));
+                    row.append($('<td>').text(element.population));
+                    $('#countries-table tbody').append(row);
+                });
+
+            },
+            error: function(){
+                $('#preloader').hide()
+                Swal.fire('Error', 'Ошибка при получении данных о странах', 'error');
+            }
+        })
+        })
+    </script>
+</body>
+</html>

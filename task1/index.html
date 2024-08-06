@@ -1,0 +1,38 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <p><b>Name: </b><span id="name"></span></p>
+    <p><b>Region: </b><span id="region"></span></p>
+    <p><b>Subregion: </b><span id="subregion"></span></p>
+    <p><b>Capital: </b><span id="capital"></span></p>
+    <p><b>Flag: </b><span id="flag"></span></p>
+
+    <script>
+        $(document).ready(function(){
+            var countryName='Frnce';
+
+            $.ajax({
+                method:'GET',
+                url:`https://restcountries.com/v2/name/${countryName}`,
+                success: function(data){
+                    var country=data[0];
+                    $('#name').text(country.name);
+                    $('#region').text(country.region)
+                    $('#subregion').text(country.subregion);
+                    $('#capital').text(country.capital);
+                    $('#flag').html(`<img src="${country.flag}" alt="flag of ${country.name}" width=100px>`);
+                },
+                error: function(){
+                    alert('Ошибка при получении данных  о стране')
+                }
+            })
+        })
+    </script>
+</body>
+</html>
